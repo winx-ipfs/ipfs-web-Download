@@ -75,8 +75,7 @@
 
 
 
-    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致。详细信息与使用教程请 <a
-        href="https://1kbtool.com/web/ipfs-checker/">参考本文</a><br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载</blockquote>
+    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致</a><br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载</blockquote>
     <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js"
       type="application/javascript"></script>
     <script>
@@ -129,13 +128,31 @@
 
         // 构建下载地址列表
         const downloadUrls = [
-          `https://cloudflare-ipfs.com/ipfs/${path}`,
-          // `https://dweb.link/ipfs/${path}`,
-          // `https://ipfs.io/ipfs/${path}`,
+          `https://gw.crustgw.work/ipfs/${path}`,
+          `https://gw.crust-gateway.xyz/ipfs/${path}`,
+          `https://gw.crust-gateway.com/ipfs/${path}`,
+          `https://gw.crustgw.org/ipfs/${path}`,
+          `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
           `https://gateway.pinata.cloud/ipfs/${path}`,
           `https://${path}.ipfs.dweb.link/`,
-          `https://ipfs.runfission.com/ipfs/${path}`,
-          `https://${path}.ipfs.ipfs.joaoleitao.org/`
+          `https://ipfs.runfission.com/ipfs/${path}`, 
+          `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
+          `https://dweb.link/ipfs/${path}`,
+          `https://ipfs.io/ipfs/${path}`
+          
         ];
 
         // 跟踪下载进度
