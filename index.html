@@ -59,8 +59,8 @@
     <input id="filepath" type="text">
     <a id="quick-download-link" target="_blank"><button><strong>快速下载</strong><br>速度更快，消耗更多流量</button> </a><br>
     
-    <a id="slow-download-link" target="_blank"><button><strong>慢速下载</strong><br>速度较慢，较节约流量</button></a><br>
-    <a id="old-version-download-link" target="_blank"><button><strong>旧版下载</strong><br>手动选取下载点，进阶</button></a>
+    <a id="slow-download-link" target="_blank"><button><strong>备用下载</strong><br>但是较慢，较节约流量</button></a><br>
+    <a id="old-version-download-link" target="_blank"><button><strong>高级下载</strong><br>手动选取下载点，进阶</button></a>
   </div>
 
 
@@ -117,7 +117,7 @@
         window.history.pushState({}, '', `/${path}?filename=${filename}`);
         quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
         slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
-        oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com//${path}?filename=${filename}`;
+        oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${path}?filename=${filename}`;
       }
 
       if (window.location.hash === '#slow' || window.location.hash === '#quick') {
