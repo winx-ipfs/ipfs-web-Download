@@ -58,7 +58,7 @@
     <label for="filepath">文件路径（CID）</label>
     <input id="filepath" type="text">
     <a id="quick-download-link" target="_blank"><button><strong>快速下载</strong><br>速度更快，消耗更多流量</button> </a><br>
-    
+    <a id="inbrowser" target="_blank"><button><strong>inbrowser下载</strong><br>安全，需本地支持</button> </a><br>
     <a id="slow-download-link" target="_blank"><button><strong>备用下载</strong><br>但是较慢，较节约流量</button></a><br>
     <a id="old-version-download-link" target="_blank"><button><strong>高级下载</strong><br>手动选取下载点，进阶</button></a>
   </div>
@@ -114,10 +114,12 @@
         let quickDownloadLink = document.querySelector('#quick-download-link');
         let slowDownloadLink = document.querySelector('#slow-download-link');
         let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
+        let inbrowserlink = document.querySelector('#inbrowser');
         window.history.pushState({}, '', `/${path}?filename=${filename}`);
         quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
         slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
         oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${path}?filename=${filename}`;
+        inbrowserlink.href = `https://${path}.ipfs.inbrowser.link/?download=true&filename=${filename}`;
       }
 
       if (window.location.hash === '#slow' || window.location.hash === '#quick') {
