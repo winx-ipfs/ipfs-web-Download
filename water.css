@@ -3,17 +3,8 @@
  * Uses light theme by default but switches to dark theme
  * if a system-wide theme preference is set on the user's device.
  */
-/* styles.css */
-#default {
-  display: none;
-}
 
-#success {
-  display: none;
-  text-align: center;
-}
-
- :root {
+:root {
   --background-body: #fff;
   --background: #efefef;
   --background-alt: #f7f7f7;
