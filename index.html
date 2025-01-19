@@ -37,8 +37,6 @@
     }
   </style>
   <link rel="stylesheet" href="/water.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7692266966719684"
-    crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -89,9 +87,16 @@
       var path = window.location.pathname.slice(1);
       var query = urlParams.toString();
 
+      // 提取 CID
+      function extractCID(url) {
+        const ipfsPattern = /\/ipfs\/(.+)/;
+        const match = url.match(ipfsPattern);
+        return match ? match[1] : null;
+      }
+
       // 设置输入框的值
       document.getElementById('filename').value = filename || '';
-      document.getElementById('filepath').value = path || '';
+      document.getElementById('filepath').value = extractCID(window.location.href) || '';
 
       // 添加事件监听器
       document.getElementById('filename').addEventListener('input', updateUrl);
@@ -129,24 +134,24 @@
 
         // 构建下载地址列表
         const downloadUrls = [
-          `https://gw.crustgw.work/${path}`,
-          `https://gw.crust-gateway.xyz/${path}`,
-          `https://gw.crust-gateway.com/${path}`,
-          `https://gw.crustgw.org/${path}`,
-          `https://ipfs-1.yoghourt.cloud/${path}`,
-          `https://ipfs-2.yoghourt.cloud/${path}`,
-          `https://ipfs-3.yoghourt.cloud/${path}`,
-          `https://ipfs-4.yoghourt.cloud/${path}`,
-          `https://ipfs-5.yoghourt.cloud/${path}`,
-          `https://ipfs-7.yoghourt.cloud/${path}`,
-          `https://ipfs-8.yoghourt.cloud/${path}`,
-          `https://ipfs-9.yoghourt.cloud/${path}`,
-          `https://ipfs-10.yoghourt.cloud/${path}`,
-          `https://ipfs-11.yoghourt.cloud/${path}`,
-          `https://ipfs-12.yoghourt.cloud/${path}`,
-          `https://ipfs-13.yoghourt.cloud/${path}`,
-          `https://ipfs-14.yoghourt.cloud/${path}`,
-          `https://ipfs-15.yoghourt.cloud/${path}`,
+          `https://gw.crustgw.work/ipfs/${path}`,
+          `https://gw.crust-gateway.xyz/ipfs/${path}`,
+          `https://gw.crust-gateway.com/ipfs/${path}`,
+          `https://gw.crustgw.org/ipfs/${path}`,
+          `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
+          `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
           `https://gateway.pinata.cloud/ipfs/${path}`,
           `https://${path}.ipfs.dweb.link/`,
           `https://ipfs.runfission.com/ipfs/${path}`, 
