@@ -3,50 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <head>
   <title>IPFS 下载助手</title>
-  <meta name="viewport"
-    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-
-    #progress {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    button {
-      width: 250px;
-      margin-top: 10px;
-      /* display: block; */
-    }
-
-    strong {
-      font-size: larger;
-    }
-  </style>
   <link rel="stylesheet" href="/water.css">
 </head>
-
 <body>
   <h1>IPFS 下载工具</h1>
-  <!-- <input 文件名
-  <input 文件路径（CID）
-  监听，然后更新到url 中，类似下面这样：
-  bafk2bzacecval4v5q54joesh2lgjtp77qhxqhvl4uacegfduvntu2aux7d63u?filename=三体_刘慈欣_zhelper-search.txt#quick -->
 
-  <div id="default" style="display: none;">
+  <div id="default">
     <h2>请输入文件信息</h2>
 
     <label for="filename">文件名&nbsp;</label>
@@ -54,261 +17,246 @@
     
     <label for="filepath">文件路径（CID）</label>
     <input id="filepath" type="text">
-    <a id="quick-download-link" target="_blank"><button><strong>快速下载</strong><br>速度更快，消耗更多流量</button> </a><br>
+    <a id="quick-download-link" target="_blank"><button><strong>快速下载</strong><br>速度更快，消耗更多流量</button></a><br>
     
     <a id="slow-download-link" target="_blank"><button><strong>慢速下载</strong><br>速度较慢，较节约流量</button></a><br>
     <a id="old-version-download-link" target="_blank"><button><strong>旧版下载</strong><br>手动选取下载点，进阶</button></a>
   </div>
 
+  <p id="progress"></p>
 
-  <p id="progress">
+  <div id="success">
+    <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
+    <a id="save"><button><strong>保存文件</strong></button></a>
+  </div>
 
-  </p>
-  <div id>
+  <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致<br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载</blockquote>
 
-    <div id="success" style="display: none; text-align: center;">
-      <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
-      <a id="save"><button><strong>保存文件</strong></button> </a>
-    </div>
+  <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js"
+    type="application/javascript"></script>
+  <script>
+    // 从 URL 中获取 filename 和 path
+    var urlParams = new URLSearchParams(window.location.search);
+    var filename = decodeURIComponent(urlParams.get('filename'));
+    var path = window.location.pathname.slice(1);
+    var query = urlParams.toString();
 
+    // 提取 CID
+    function extractCID(url) {
+      const ipfsPattern = /\/ipfs\/(.+)/;
+      const match = url.match(ipfsPattern);
+      return match ? match[1] : null;
+    }
 
+    // 设置输入框的值
+    document.getElementById('filename').value = filename || '';
+    document.getElementById('filepath').value = extractCID(window.location.href) || '';
 
+    // 添加事件监听器
+    document.getElementById('filename').addEventListener('input', updateUrl);
+    document.getElementById('filepath').addEventListener('input', updateUrl);
 
-    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致</a><br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载</blockquote>
-    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js"
-      type="application/javascript"></script>
-    <script>
-
-
-
-      // 从 URL 中获取 filename 和 path
-      var urlParams = new URLSearchParams(window.location.search);
-      var filename = decodeURIComponent(urlParams.get('filename'));
-      var path = window.location.pathname.slice(1);
-      var query = urlParams.toString();
-
-      // 提取 CID
-      function extractCID(url) {
-        const ipfsPattern = /\/ipfs\/(.+)/;
-        const match = url.match(ipfsPattern);
-        return match ? match[1] : null;
+    function updateUrl() {
+      filename = document.getElementById('filename').value;
+      path = document.getElementById('filepath').value;
+      
+      if (filename && path) {
+        updateButton()
+        // 更新URL
+        window.history.pushState({}, '', `/${path}?filename=${filename}`);
       }
+    }
 
-      // 设置输入框的值
-      document.getElementById('filename').value = filename || '';
-      document.getElementById('filepath').value = extractCID(window.location.href) || '';
+    // 在页面加载完成后更新按钮的链接
+    window.onload = function() {
+      updateButton();
+    };
 
-      // 添加事件监听器
-      document.getElementById('filename').addEventListener('input', updateUrl);
-      document.getElementById('filepath').addEventListener('input', updateUrl);
+    // 更新信息
+    function updateButton() {
+      let quickDownloadLink = document.querySelector('#quick-download-link');
+      let slowDownloadLink = document.querySelector('#slow-download-link');
+      let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
 
-      function updateUrl() {
-          filename = document.getElementById('filename').value;
-          path = document.getElementById('filepath').value;
-          
-          if (filename && path) {
-              updateButton()
-              // 更新URL
-              window.history.pushState({}, '', `/${path}?filename=${filename}`);
-          }
-      }
+      // 修复问题一：避免重复添加 /ipfs/
+      const pathWithIpfs = `/ipfs/${path}`;
+      quickDownloadLink.href = `${pathWithIpfs}?filename=${filename}#quick`;
+      slowDownloadLink.href = `${pathWithIpfs}?filename=${filename}#slow`;
 
-      // 在页面加载完成后更新按钮的链接
-      window.onload = function() {
-        updateButton();
-      };
+      // 修复问题二：避免重复添加 /ipfs/
+      const cleanPath = path.startsWith('ipfs/') ? path.substring(5) : path;
+      oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${cleanPath}?filename=${filename}`;
+    }
 
-      // 更新信息
-      function updateButton() {
-        let quickDownloadLink = document.querySelector('#quick-download-link');
-        let slowDownloadLink = document.querySelector('#slow-download-link');
-        let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
+    // 构建下载地址列表
+    const downloadUrls = [
+      `https://gw.crustgw.work/ipfs/${path}`,
+      `https://gw.crust-gateway.xyz/ipfs/${path}`,
+      `https://gw.crust-gateway.com/ipfs/${path}`,
+      `https://gw.crustgw.org/ipfs/${path}`,
+      `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
+      `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
+      `https://gateway.pinata.cloud/ipfs/${path}`,
+      `https://${path}.ipfs.dweb.link/`,
+      `https://ipfs.runfission.com/ipfs/${path}`, 
+      `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
+      `https://dweb.link/ipfs/${path}`,
+      `https://ipfs.io/ipfs/${path}`
+    ];
 
-        // 修复问题一：避免重复添加 /ipfs/
-        const pathWithIpfs = `/ipfs/${path}`;
-        quickDownloadLink.href = `${pathWithIpfs}?filename=${filename}#quick`;
-        slowDownloadLink.href = `${pathWithIpfs}?filename=${filename}#slow`;
+    // 跟踪下载进度
+    var maxProgress = 0;
+    var progressCount = 0;
 
-        // 修复问题二：避免重复添加 /ipfs/
-        const cleanPath = path.startsWith('ipfs/') ? path.substring(5) : path;
-        oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${cleanPath}?filename=${filename}`;
-      }
+    function updateProgress() {
+      const progressElement = document.getElementById('progress');
+      const formattedProgress = maxProgress.toFixed(1); // 将进度值保留一位小数
+      progressElement.innerHTML = `文件名 <strong>${filename}</strong> <br> 下载进度 <strong>${formattedProgress}%</strong>`;
+    }
 
-      // 构建下载地址列表
-      const downloadUrls = [
-        `https://gw.crustgw.work/ipfs/${path}`,
-        `https://gw.crust-gateway.xyz/ipfs/${path}`,
-        `https://gw.crust-gateway.com/ipfs/${path}`,
-        `https://gw.crustgw.org/ipfs/${path}`,
-        `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
-        `https://gateway.pinata.cloud/ipfs/${path}`,
-        `https://${path}.ipfs.dweb.link/`,
-        `https://ipfs.runfission.com/ipfs/${path}`, 
-        `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
-        `https://dweb.link/ipfs/${path}`,
-        `https://ipfs.io/ipfs/${path}`
-      ];
-
-      // 跟踪下载进度
-      var maxProgress = 0;
-      var progressCount = 0;
-
-      function updateProgress() {
-        const progressElement = document.getElementById('progress');
-        const formattedProgress = maxProgress.toFixed(1); // 将进度值保留一位小数
-        progressElement.innerHTML = `文件名 <strong>${filename}</strong> <br> 下载进度 <strong>${formattedProgress}%</strong>`;
-      }
-
-      // 下载文件并展示进度
-      function downloadWithProgress(url, controller=null) {
-        return new Promise((resolve, reject) => {
-          const config = {
-            responseType: 'arraybuffer',
-            onDownloadProgress: (progressEvent) => {
-              let progress;
-              if(!progressEvent.total){
-                  progress = 0;
-              } else {
-                  progress = (progressEvent.loaded / progressEvent.total) * 100;
-              }
-              console.log('下载进度：', progress);
-              // 在这里更新进度条的显示
-              maxProgress = Math.max(maxProgress, progress);
-              updateProgress();
+    // 下载文件并展示进度
+    function downloadWithProgress(url, controller=null) {
+      return new Promise((resolve, reject) => {
+        const config = {
+          responseType: 'arraybuffer',
+          onDownloadProgress: (progressEvent) => {
+            let progress;
+            if(!progressEvent.total){
+                progress = 0;
+            } else {
+                progress = (progressEvent.loaded / progressEvent.total) * 100;
             }
-          };
-
-          if (controller) {
-            config.signal = controller.signal;
+            console.log('下载进度：', progress);
+            // 在这里更新进度条的显示
+            maxProgress = Math.max(maxProgress, progress);
+            updateProgress();
           }
+        };
 
-          axios.get(url, config)
-            .then((response) => {
-              resolve(response.data);
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        });
+        if (controller) {
+          config.signal = controller.signal;
+        }
+
+        axios.get(url, config)
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    }
+
+    // 保存文件到本地
+    function saveLocally(data) {
+      const blob = new Blob([data]);
+      const link = document.getElementById('save');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+
+    // 以上为公用，下面分别处理
+    if (window.location.hash === '#slow') {
+      // 依次尝试下载地址
+      function tryNextDownload(index) {
+        if (index >= downloadUrls.length) {
+          // 所有下载地址都已尝试完毕
+          console.log('所有下载地址都已尝试完毕');
+          alert('所有下载地址都已尝试完毕，请考虑手动下载')
+          return;
+        }
+
+        const url = downloadUrls[index];
+        downloadWithProgress(url)
+          .then((data) => {
+            console.log(`下载完成：${data.length} bytes`);
+            let myDiv = document.getElementById('success');
+            myDiv.style.display = 'block';
+            saveLocally(data);
+          })
+          .catch((error) => {
+            console.error(`下载失败：${url}`);
+            progressCount++;
+            tryNextDownload(progressCount);
+          });
       }
 
-      // 保存文件到本地
-      function saveLocally(data) {
-        const blob = new Blob([data]);
-        const link = document.getElementById('save');
-        // const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
-        // URL.revokeObjectURL(link.href);
-      }
+      updateProgress();
+      // 开始下载
+      tryNextDownload(progressCount);
+    } else if (window.location.hash === '#quick') {
+      // 启动下载并中断其他下载
+      function startDownload() {
+        const controllers = [];
+        const downloadPromises = downloadUrls.map((url, index) => {
+          const controller = new AbortController();
+          controllers.push(controller);
 
-      // 以上为公用，下面分别处理
-      if (window.location.hash === '#slow') {
-        // 依次尝试下载地址
-        function tryNextDownload(index) {
-          if (index >= downloadUrls.length) {
-            // 所有下载地址都已尝试完毕
-            console.log('所有下载地址都已尝试完毕');
-            alert('所有下载地址都已尝试完毕，请考虑手动下载')
-            return;
-          }
-
-          const url = downloadUrls[index];
-          downloadWithProgress(url)
+          return downloadWithProgress(url, controller)
             .then((data) => {
-              console.log(`下载完成：${data.length} bytes`);
-              let myDiv = document.getElementById('success');
-              myDiv.style.display = 'block';
-              saveLocally(data);
+              if (maxProgress === 100) {
+                // 当有一个进程完成时中断其他下载
+                for (let i = 0; i < controllers.length; i++) {
+                  if (i !== index) {
+                    controllers[i].abort();
+                  }
+                }
+              }
+              return data;
             })
             .catch((error) => {
               console.error(`下载失败：${url}`);
-              progressCount++;
-              tryNextDownload(progressCount);
-            });
-        }
-
-        updateProgress();
-        // 开始下载
-        tryNextDownload(progressCount);
-      }
-      else {
-        // 启动下载并中断其他下载
-        function startDownload() {
-          const controllers = [];
-          const downloadPromises = downloadUrls.map((url, index) => {
-            const controller = new AbortController();
-            controllers.push(controller);
-
-            return new Promise((resolve, reject) => {
-              downloadWithProgress(url, controller)
-                .then((data) => {
-                  if (maxProgress === 100) {
-                    // 当有一个进程完成时中断其他下载
-                    for (let i = 0; i < controllers.length; i++) {
-                      if (i !== index) {
-                        controllers[i].abort();
-                      }
-                    }
-                  }
-                  resolve(data);
-                })
-                .catch((error) => {
-                  reject(error);
-                })
-                .finally(() => {
-                  progressCount++;
-                  if (progressCount === downloadUrls.length) {
-                    if (maxProgress !== 100) {
-                      console.log('所有下载都被中断');
-                    }
-                  }
-                });
-            });
-          });
-
-          Promise.allSettled(downloadPromises)
-            .then((results) => {
-              const successfulDownloads = results.filter(
-                (result) => result.status === 'fulfilled'
-              );
-              if (successfulDownloads.length > 0) {
-                maxProgress = 100;
-                updateProgress();
-                console.log(`下载完成：${successfulDownloads[0].value.length} bytes`);
-                let myDiv = document.getElementById('success');
-                myDiv.style.display = 'block';
-                saveLocally(successfulDownloads[0].value);
-              }
+              throw error;
             })
-            .catch((error) => {
-              console.error(error);
+            .finally(() => {
+              progressCount++;
+              if (progressCount === downloadUrls.length) {
+                if (maxProgress !== 100) {
+                  console.log('所有下载都被中断');
+                }
+              }
             });
-        }
-        updateProgress();
-        // 开始下载  
-        startDownload();
-      }
-      else {
-        let myDiv = document.getElementById('default');
-        myDiv.style.display = 'block';
-        updateButton()
-      }
-    </script>
-<!-- Cloudflare Pages Analytics --><script defer src='static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d2e9d08f3a98412995881c345454d40b"}'></script><!-- Cloudflare Pages Analytics --></body>
+        });
 
+        Promise.allSettled(downloadPromises)
+          .then((results) => {
+            const successfulDownloads = results.filter(
+              (result) => result.status === 'fulfilled'
+            );
+            if (successfulDownloads.length > 0) {
+              maxProgress = 100;
+              updateProgress();
+              console.log(`下载完成：${successfulDownloads[0].value.length} bytes`);
+              let myDiv = document.getElementById('success');
+              myDiv.style.display = 'block';
+              saveLocally(successfulDownloads[0].value);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      updateProgress();
+      // 开始下载  
+      startDownload();
+    } else {
+      let myDiv = document.getElementById('default');
+      myDiv.style.display = 'block';
+      updateButton();
+    }
+  </script>
+</body>
 </html>
