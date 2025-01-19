@@ -113,54 +113,54 @@
           }
       }
 
-      // 更新信息
-      function updateButton() {
-        let quickDownloadLink = document.querySelector('#quick-download-link');
-        let slowDownloadLink = document.querySelector('#slow-download-link');
-        let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
+      javascript
 
-        quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
-        slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
-        oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com//${path}?filename=${filename}`;
-      }
 
-      if (window.location.hash === '#slow' || window.location.hash === '#quick') {
 
-        // 检查filename和path是否为空
-        if (!filename || !path) {
-          alert('文件名或路径为空，请返回上一页面查看使用说明');
-          throw new Error('文件名或路径为空！');
-        }
 
-        // 构建下载地址列表
-        const downloadUrls = [
-          `https://gw.crustgw.work/ipfs/${path}`,
-          `https://gw.crust-gateway.xyz/ipfs/${path}`,
-          `https://gw.crust-gateway.com/ipfs/${path}`,
-          `https://gw.crustgw.org/ipfs/${path}`,
-          `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
-          `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
-          `https://gateway.pinata.cloud/ipfs/${path}`,
-          `https://${path}.ipfs.dweb.link/`,
-          `https://ipfs.runfission.com/ipfs/${path}`, 
-          `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
-          `https://dweb.link/ipfs/${path}`,
-          `https://ipfs.io/ipfs/${path}`
-          
-        ];
+// 更新信息
+       function updateButton() {
+       let quickDownloadLink = document.querySelector('#quick-download-link');
+      let slowDownloadLink = document.querySelector('#slow-download-link');
+    let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
 
+  // 修复问题一：避免重复添加 /ipfs/
+      const pathWithIpfs = `/ipfs/${path}`;
+    quickDownloadLink.href = `${pathWithIpfs}?filename=${filename}#quick`;
+    slowDownloadLink.href = `${pathWithIpfs}?filename=${filename}#slow`;
+
+  // 修复问题二：避免重复添加 /ipfs/
+    const cleanPath = path.startsWith('ipfs/') ? path.substring(5) : path;
+    oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${cleanPath}?filename=${filename}`;
+}
+
+// 构建下载地址列表
+       const downloadUrls = [
+   `https://gw.crustgw.work/ipfs/${path}`,
+   `https://gw.crust-gateway.xyz/ipfs/${path}`,
+   `https://gw.crust-gateway.com/ipfs/${path}`,
+   `https://gw.crustgw.org/ipfs/${path}`,
+   `https://ipfs-1.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-2.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-4.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-5.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-8.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-9.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
+   `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
+   `https://gateway.pinata.cloud/ipfs/${path}`,
+   `https://${path}.ipfs.dweb.link/`,
+   `https://ipfs.runfission.com/ipfs/${path}`, 
+   `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
+   `https://dweb.link/ipfs/${path}`,
+   `https://ipfs.io/ipfs/${path}`
+];
         // 跟踪下载进度
         var maxProgress = 0;
         var progressCount = 0;
