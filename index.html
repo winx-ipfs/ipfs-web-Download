@@ -77,7 +77,7 @@
 
 
 
-    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致</a><br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载</blockquote>
+    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致</a><br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载 原作者：1kbtool</blockquote>
     <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js"
       type="application/javascript"></script>
     <script>
@@ -118,7 +118,7 @@
         window.history.pushState({}, '', `/${path}?filename=${filename}`);
         quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
         slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
-        oldVersionDownloadLink.href = `https://check.ipfs.1kbtool.com/${path}?filename=${filename}`;
+        oldVersionDownloadLink.href = `https://check.ipfs.winx.run/${path}?filename=${filename}`;
         inbrowserlink.href = `https://${path}.ipfs.inbrowser.link/?download=true&filename=${filename}`;
       }
 
