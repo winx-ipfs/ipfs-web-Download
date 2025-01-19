@@ -167,8 +167,7 @@
           `https://${path}.ipfs.ipfs.joaoleitao.org/`, 
           `https://dweb.link/ipfs/${path}`,
           `https://ipfs.io/ipfs/${path}`
-          
-        ];
+          ];
 
         // 跟踪下载进度
         var maxProgress = 0;
@@ -181,37 +180,67 @@
         }
 
         // 下载文件并展示进度
-        function downloadWithProgress(url, controller=null) {
-          return new Promise((resolve, reject) => {
-            const config = {
-              responseType: 'arraybuffer',
-              onDownloadProgress: (progressEvent) => {
-                let progress;
-                if(!progressEvent.total){
-                    progress = 0;
-                } else {
-                    progress = (progressEvent.loaded / progressEvent.total) * 100;
-                }
-                console.log('下载进度：', progress);
-                // 在这里更新进度条的显示
-                maxProgress = Math.max(maxProgress, progress);
-                updateProgress();
-              }
-            };
+        // 修改后的 downloadWithProgress 函数，增加 totalBytes 和 completedBytes
+      let totalBytes = 0;
+      let completedBytes = 0;
 
-            if (controller) {
-              config.signal = controller.signal;
-            }
+      function downloadWithProgress(url, controller = null) {
+        return new Promise((resolve, reject) => {
+         const config = {
+        responseType: 'arraybuffer',
+        onDownloadProgress: (progressEvent) => {
+           totalBytes = progressEvent.total || totalBytes;
+           completedBytes += progressEvent.loaded;
+           let progress = (completedBytes / totalBytes) * 100;
+           console.log('下载进度：', progress);
+          maxProgress = Math.max(maxProgress, progress);
+         updateProgress();
+      }
+    };
 
-            axios.get(url, config)
-              .then((response) => {
-                resolve(response.data);
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          });
-        }
+       if (controller) {
+         config.signal = controller.signal;
+       }
+
+       axios.get(url, config)
+        .then((response) => {
+           resolve(response.data);
+        })
+          .catch((error) => {
+           reject(error);
+        });
+     });
+  }
+
+// 更新 updateProgress 函数，基于 totalBytes 和 completedBytes
+function updateProgress() {
+  const progressElement = document.getElementById('progress');
+  const formattedProgress = maxProgress.toFixed(1); // 将进度值保留一位小数
+  progressElement.innerHTML = `文件名 <strong>${filename}</strong> <br> 下载进度 <strong>${formattedProgress}%</strong>`;
+}
+
+// 在 #quick 模式下，确保所有请求完成后更新进度
+Promise.allSettled(downloadPromises)
+  .then((results) => {
+    const successfulDownloads = results.filter(
+      (result) => result.status === 'fulfilled'
+    );
+    if (successfulDownloads.length > 0) {
+      maxProgress = 100;
+      updateProgress();
+      console.log(`下载完成：${successfulDownloads[0].value.length} bytes`);
+      let myDiv = document.getElementById('success');
+      myDiv.style.display = 'block';
+      saveLocally(successfulDownloads[0].value);
+    } else {
+      console.log('所有下载都被中断');
+      updateProgress();
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 
         // 保存文件到本地
         function saveLocally(data) {
