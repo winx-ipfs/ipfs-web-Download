@@ -130,23 +130,6 @@
             overflow: hidden;
             position: relative;
         }
-
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            color: Black;
-            font-size: 0.875rem;
-            font-weight: bold;
-        }
         #progress {
             text-align: center;
             margin-top: 20px;
@@ -195,7 +178,7 @@
 </head>
 <body>
     <h1>IPFS 下载工具</h1>
-    <div id="default">
+    <div id="default" style="display: block;">
         <h2>确定文件信息</h2>
         <div class="input-group">
             <label for="filename">文件名</label>
@@ -237,52 +220,17 @@
             </button>
         </a>
     </div>
-    <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-            <span class="progress-text" id="progress-text"></span>
-    </div>
     <p id="progress"></p>
-
-    <div id="success" style="display: none;">
+   <div id="success" style="display: none;">
         <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
         <a id="save">
             <button><strong>保存文件</strong></button>
         </a>
     </div>
-
     <blockquote>
         本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致<br>
         如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择"旧版下载"手动点击蓝色链接下载 
     </blockquote>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const progressElement = document.getElementById('progress');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-
-        function formattedProgress(progress) {
-            return progress.toFixed(2); // 将进度值保留两位小数
-        }
-
-        const observer = new MutationObserver(function(mutations) {
-            const text = progressElement.textContent;
-            const match = text.match(/下载进度 <strong>(\d+)%<\/strong>/);
-            if (match) {
-                const percentage = match[1];
-                const formattedPercentage = formattedProgress(percentage);
-                progressBar.style.width = formattedPercentage + '%';
-                progressText.textContent = formattedPercentage + '%';
-            }
-        });
-
-        observer.observe(progressElement, {
-            childList: true,
-            characterData: true,
-            subtree: true
-        });
-    });
-</script>
-
     <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/axios.min.js" type="application/javascript"></script>
     <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/index.js" type="text/javascript"></script>
     <script defer src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/microsoft-clarity.js"></script>
