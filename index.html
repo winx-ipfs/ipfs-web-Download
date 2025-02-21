@@ -1,37 +1,234 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>IPFS 下载助手</title>
-  <link rel="stylesheet" href="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/css/index.css">
-  <link rel="stylesheet" href="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/css/water.css">
-  <link rel="shortcut icon" href="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>IPFS 下载助手</title>
+    <link rel="shortcut icon" href="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/favicon.ico">
+    <style>
+        :root {
+            --background: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+        }
+
+        #default {
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .download-option {
+            display: block;
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        button:hover {
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        button strong {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .speed-indicator {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        #quick-download-link button .speed-indicator { background-color: #22c55e; }
+        #inbrowser button .speed-indicator { background-color: #eab308; }
+        #slow-download-link button .speed-indicator { background-color: #ef4444; }
+
+        #progress {
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        #success {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        #success button {
+            text-align: center;
+            margin-top: 1rem;
+            background: #22c55e;
+            color: white;
+            border: none;
+        }
+
+        #success button:hover {
+            background: #16a34a;
+        }
+
+        blockquote {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            #default {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>IPFS 下载工具</h1>
-  <div id="default" style="display: none;">
-    <h2>确定文件信息</h2>
-    <label for="filename">文件名&nbsp;</label>
-    <input id="filename" type="text">
-    <label for="filepath">文件路径（CID）</label>
-    <input id="filepath" type="text">
-    <a id="quick-download-link" target="_blank"><button><strong>快速下载</strong><br>速度更快，消耗更多流量</button> </a><br>
-    <a id="inbrowser" target="_blank"><button><strong>inbrowser下载</strong><br>安全，需浏览器支持</button> </a><br>
-    <a id="slow-download-link" target="_blank"><button><strong>备用下载</strong><br>但是较慢，较节约流量</button></a><br>
-    <a id="old-version-download-link" target="_blank"><button><strong>高级下载</strong><br>手动选取下载点，进阶</button></a>
-  </div>
-  <p id="progress">
-  </p>
-  <div id>
-    <div id="success" style="display: none; text-align: center;">
-      <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
-      <a id="save"><button><strong>保存文件</strong></button> </a>
+    <h1>IPFS 下载工具</h1>
+    <div id="default">
+        <h2>确定文件信息</h2>
+        <div class="input-group">
+            <label for="filename">文件名</label>
+            <input id="filename" type="text" placeholder="请输入文件名">
+        </div>
+        <div class="input-group">
+            <label for="filepath">文件路径（CID）</label>
+            <input id="filepath" type="text" placeholder="请输入CID">
+        </div>
+
+        <a id="quick-download-link" target="_blank" class="download-option">
+            <button>
+                <strong>网关加速下载</strong>
+                通过优质网关节点高速下载
+                <span class="speed-indicator"></span>
+            </button>
+        </a>
+
+        <a id="inbrowser" target="_blank" class="download-option">
+            <button>
+                <strong>inbrowser下载</strong>
+                多节点分发，稳定可靠
+                <span class="speed-indicator"></span>
+            </button>
+        </a>
+
+        <a id="slow-download-link" target="_blank" class="download-option">
+            <button>
+                <strong>备用下载</strong>
+                但是较慢，较节约流量
+                <span class="speed-indicator"></span>
+            </button>
+        </a>
+
+        <a id="old-version-download-link" target="_blank" class="download-option">
+            <button>
+                <strong>高级下载</strong>
+                手动选取下载点，进阶
+            </button>
+        </a>
     </div>
-    <blockquote>本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致<br>如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择“旧版下载”手动点击蓝色链接下载 原作者：1kbtool</blockquote>
+
+    <p id="progress"></p>
+
+    <div id="success" style="display: none;">
+        <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
+        <a id="save">
+            <button><strong>保存文件</strong></button>
+        </a>
+    </div>
+
+    <blockquote>
+        本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致<br>
+        如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择"旧版下载"手动点击蓝色链接下载 
+    </blockquote>
+
     <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/axios.min.js" type="application/javascript"></script>
     <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/index.js" type="text/javascript"></script>
-  </div>
+    <script defer src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/microsoft-clarity.js"></script>
 </body>
-<script defer src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/microsoft-clarity.js"></script>
 </html>
