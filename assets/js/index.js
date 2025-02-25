@@ -81,8 +81,18 @@ if (window.location.hash === '#slow' || window.location.hash === '#quick') {
 
     function updateProgress() {
         const progressElement = document.getElementById('progress');
-        const formattedProgress = maxProgress.toFixed(1); // 将进度值保留一位小数
-        progressElement.innerHTML = `文件名 <strong>${filename}</strong> <br> 下载进度 <strong>${formattedProgress}%</strong>`;
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progress-container');
+        const formattedProgress = maxProgress.toFixed(1);
+        
+        // 显示进度容器
+        progressContainer.style.display = 'block';
+        
+        // 更新进度文本
+        progressElement.innerHTML = `文件名 <strong>${filename}</strong><br>下载进度 <strong>${formattedProgress}%</strong>`;
+        
+        // 更新进度条
+        progressBar.style.width = `${maxProgress}%`;
     }
 
     // 下载文件并展示进度
