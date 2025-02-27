@@ -31,11 +31,13 @@ function updateButton() {
     let slowDownloadLink = document.querySelector('#slow-download-link');
     let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
     let inbrowserlink = document.querySelector('#inbrowser');
+    let ipfsscan = document.querySelector('#ipfsscan');
     window.history.pushState({}, '', `/${path}?filename=${filename}`);
     quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
     slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
     oldVersionDownloadLink.href = `https://check.ipfs.winx.run/${path}?filename=${filename}`;
     inbrowserlink.href = `https://${path}.ipfs.inbrowser.link/?download=true&filename=${filename}`;
+    ipfsscan.href = `https://ipfs-scan.io/?cid=${path}`;
 }
 
 if (window.location.hash === '#slow' || window.location.hash === '#quick') {
