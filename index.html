@@ -119,9 +119,10 @@
             border-radius: 50%;
         }
 
-        #quick-download-link button .speed-indicator { background-color: #22c55e; }
+        #quick-download-link button .speed-indicator { background-color: #01f868; }
         #inbrowser button .speed-indicator { background-color: #eab308; }
         #slow-download-link button .speed-indicator { background-color: #ef4444; }
+        #ipfs-scan button .speed-indicator { background-color: #4400ff; }
        /* 新增进度条样式 */
  progress-wrapper {
     max-width: 320px;
@@ -248,7 +249,6 @@
                 <span class="speed-indicator"></span>
             </button>
         </a>
-
         <a id="slow-download-link" target="_blank" class="download-option">
             <button>
                 <strong>备用下载</strong>
@@ -256,7 +256,13 @@
                 <span class="speed-indicator"></span>
             </button>
         </a>
-
+        <a id="ipfs-scan" target="_blank" class="download-option">
+            <button>
+                <strong>IPFS-SCAN</strong>
+                检查cid是否存在，并获取文件信息
+                <span class="speed-indicator"></span>
+            </button>
+        </a>
         <a id="old-version-download-link" target="_blank" class="download-option">
             <button>
                 <strong>高级下载</strong>
