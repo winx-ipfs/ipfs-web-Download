@@ -31,11 +31,13 @@ function updateButton() {
     let slowDownloadLink = document.querySelector('#slow-download-link');
     let oldVersionDownloadLink = document.querySelector('#old-version-download-link');
     let inbrowserlink = document.querySelector('#inbrowser');
+    let ipfsscan = document.querySelector('#ipfsscan');
     window.history.pushState({}, '', `/${path}?filename=${filename}`);
     quickDownloadLink.href = `/${path}?filename=${filename}#quick`;
     slowDownloadLink.href = `/${path}?filename=${filename}#slow`;
     oldVersionDownloadLink.href = `https://check.ipfs.winx.run/${path}?filename=${filename}`;
     inbrowserlink.href = `https://${path}.ipfs.inbrowser.link/?download=true&filename=${filename}`;
+    ipfsscan.href = `https://ipfs-scan.io/?cid=${path}`;
 }
 
 if (window.location.hash === '#slow' || window.location.hash === '#quick') {
@@ -52,20 +54,20 @@ if (window.location.hash === '#slow' || window.location.hash === '#quick') {
         `https://gw.crust-gateway.xyz/ipfs/${path}`,
         `https://gw.crust-gateway.com/ipfs/${path}`,
         `https://gw.crustgw.org/ipfs/${path}`,
+        `https://ipfs.nodamoda.xyz/ipfs/${path}`,
+        `https://gateway.ipfsscan.io/ipfs/${path}`,
+        `https://data.fitroot.ai/ipfs/${path}`,
+        `https://build.nino.ninja/ipfs/${path}`,
         `https://ipfs.crossbell.io/ipfs/${path}`,
         `https://gw.smallwolf.me/ipfs/${path}`,
         `https://ipfs-3.yoghourt.cloud/ipfs/${path}`,
         `https://i0.img2ipfs.com/ipfs/${path}`,
         `https://eth.sucks/ipfs/${path}`,
-        `https://ipfs-7.yoghourt.cloud/ipfs/${path}`,
-        `https://4everland.io/ipfs/${path}`,
         `https://ipfs.forma.art/ipfs/${path}`,
-        `https://ipfs-10.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-11.yoghourt.cloud/ipfs/${path}`,
+        `https://cru.izhong.top/ipfs/${path}`,
+        `http://localhost:8080/ipfs/${path}`,
+        `https://flk-ipfs.xyz/ipfs/${path}`,
         `https://ipfs-12.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-13.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-14.yoghourt.cloud/ipfs/${path}`,
-        `https://ipfs-15.yoghourt.cloud/ipfs/${path}`,
         `https://gateway.pinata.cloud/ipfs/${path}`,
         `https://${path}.ipfs.dweb.link/`,
         `https://ipfs.runfission.com/ipfs/${path}`,
@@ -81,8 +83,18 @@ if (window.location.hash === '#slow' || window.location.hash === '#quick') {
 
     function updateProgress() {
         const progressElement = document.getElementById('progress');
-        const formattedProgress = maxProgress.toFixed(1); // 将进度值保留一位小数
-        progressElement.innerHTML = `文件名 <strong>${filename}</strong> <br> 下载进度 <strong>${formattedProgress}%</strong>`;
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progress-container');
+        const formattedProgress = maxProgress.toFixed(1);
+        
+        // 显示进度容器
+        progressContainer.style.display = 'block';
+        
+        // 更新进度文本
+        progressElement.innerHTML = `文件名 <strong>${filename}</strong><br>下载进度 <strong>${formattedProgress}%</strong>`;
+        
+        // 更新进度条
+        progressBar.style.width = `${maxProgress}%`;
     }
 
     // 下载文件并展示进度

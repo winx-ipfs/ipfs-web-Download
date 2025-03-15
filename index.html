@@ -14,6 +14,8 @@
             --border-color: #e2e8f0;
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
             --border-radius: 12px;
+            --progress-background: rgba(255, 255, 255, 0.8);
+            --progress-bar: rgba(0, 122, 255, 0.9);
         }
 
         * {
@@ -117,23 +119,66 @@
             border-radius: 50%;
         }
 
-        #quick-download-link button .speed-indicator { background-color: #22c55e; }
+        #quick-download-link button .speed-indicator { background-color: #01f868; }
         #inbrowser button .speed-indicator { background-color: #eab308; }
         #slow-download-link button .speed-indicator { background-color: #ef4444; }
+        #ipfsscan button .speed-indicator { background-color: #4400ff; }
        /* 新增进度条样式 */
-        .progress-container {
-            width: 100%;
-            height: 20px;
-            background-color: #e2e8f0;
-            border-radius: 10px;
-            margin: 1rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-        #progress {
-            text-align: center;
-            margin-top: 20px;
-        }
+ progress-wrapper {
+    max-width: 320px;
+    margin: 20px auto;
+    padding: 16px;
+    background: var(--progress-background);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05),
+                0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.progress-info {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+}
+
+.progress-track {
+    height: 4px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--progress-bar);
+    border-radius: 6px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+}
+
+/* 添加深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    .progress-wrapper {
+        background: rgba(0, 0, 0, 0.6);
+    }
+    .progress-info {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    .progress-track {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .progress-bar {
+        background: rgba(10, 132, 255, 0.9);
+    }
+}
 
         #success {
             background: #f0fdf4;
@@ -204,7 +249,6 @@
                 <span class="speed-indicator"></span>
             </button>
         </a>
-
         <a id="slow-download-link" target="_blank" class="download-option">
             <button>
                 <strong>备用下载</strong>
@@ -212,7 +256,13 @@
                 <span class="speed-indicator"></span>
             </button>
         </a>
-
+        <a id="ipfsscan" target="_blank" class="download-option">
+            <button>
+                <strong>IPFS-SCAN</strong>
+                检查cid是否存在，并获取文件信息
+                <span class="speed-indicator"></span>
+            </button>
+        </a>
         <a id="old-version-download-link" target="_blank" class="download-option">
             <button>
                 <strong>高级下载</strong>
@@ -220,7 +270,12 @@
             </button>
         </a>
     </div>
-    <p id="progress"></p>
+    <div class="progress-wrapper" id="progress-container" style="display: none;">
+        <div id="progress" class="progress-info"></div>
+        <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+    </div>
    <div id="success" style="display: none;">
         <p><strong>下载已完成，如果浏览器没有弹出文件保存对话框，请点击下方按钮手动保存</strong></p>
         <a id="save">
@@ -228,11 +283,14 @@
         </a>
     </div>
     <blockquote>
-        本工具仅用于通过文件参数从现有 IPFS 网络中下载文件，并不存储任何数据。请检查所得到的文件和所需要的文件是否一致<br>
-        如果使用快速/慢速下载进度达到100%卡死的情况，可能是浏览器不支持，请选择"旧版下载"手动点击蓝色链接下载 
+        本工具仅用于通过文件流从现有 IPFS 网络中下载文件，并不存储任何数据。<br>
+        请检查所得到的文件和所需要的文件是否一致。<br>
+        快速和备用仅仅只使用网关，推荐直接从ipfs网络中获取，使用inbrowser下载。<br>
+        感谢<a href="https://crust.network/" target="_blank" rel="noopener">Crust</a>提供网关和存储支持！！！<br>
+        ps：我建议使用 使用<a href="https://docs.ipfs.tech/install/ipfs-desktop/" target="_blank" rel="noopener">IPFS客户端</a>下载 目前最稳的还是IPFS客户端下载 没有之一 ：）
     </blockquote>
-    <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/axios.min.js" type="application/javascript"></script>
-    <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/index.js" type="text/javascript"></script>
-    <script defer src="https://registry.npmmirror.com/@ao-x/ipfs-winx/0.0.1/files/assets/js/microsoft-clarity.js"></script>
+    <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/latest/files/assets/js/axios.min.js" type="application/javascript"></script>
+    <script src="https://registry.npmmirror.com/@ao-x/ipfs-winx/latest/files/assets/js/index.js" type="text/javascript"></script>
+    <script defer src="https://registry.npmmirror.com/@ao-x/ipfs-winx/latest/files/assets/js/microsoft-clarity.js"></script>
 </body>
 </html>
